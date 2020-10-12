@@ -57,9 +57,40 @@ db.dropDatabase();  //删除数据库
     db.collection.drop()
     ```
 
-	```sql
-  db.collection.drop()
-	```
-
-
 ##### 文档操作
+
+* 插入文档
+
+    ```
+     db.COLLECTION_NAME.insert(document);
+     db.user.insert({"_id": 1, "name": "dandan", "age": 22, "addr": "dnasuida"});
+     db.user.insert([{"_id": 3, "name": "dandan", "age": 22, "addr": "dnasuida"},
+    {"_id": 2, "name": "dan", "age": 12, "addr": "wuhan"},
+    ]);
+    # insert() 既可以插数组，也可以插单条数据
+    
+    db.user.insertOne({"_id": 4, "name": "dandan", "age": 22, "addr": "dnasuida"});
+    # insertOne() 只能插入一条数据，不能插数组
+    
+    db.user.insertMany([{"_id": 5, "name": "dandan", "age": 22, "addr": "dnasuida"}]);
+    # insertMany() 需要插入list
+    
+    插入的时候注意主键重复会报错
+    ```
+
+* 更新文档
+
+    ```SQL
+    # 语法格式
+    db.collection.update(    
+    	<query>, 
+    	<update>, 
+    	{       
+    		upsert: <boolean>,   
+    		multi: <boolean>,  
+    		writeConcern: <document>
+    	}
+    )
+    ```
+
+    
