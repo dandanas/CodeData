@@ -1,0 +1,39 @@
+ <dependency>
+     <groupId>org.slf4j</groupId>
+     <artifactId>slf4j-api</artifactId>
+ </dependency>
+
+ pom.xml文件依赖中没有版本号，也没有任何问题，项目能正常跑起来。
+ 原因：
+ 每个Spring Boot版本都提供了它支持的精选依赖列表。实际上，您不需要为构建配置中的所有这些依赖项提供版本，因为Spring Boot会为您管理版本。
+ 当您升级Spring Boot本身时，这些依赖项也会以一致的方式升级
+ 每个Spring Boot版本都与Spring Framework的基本版本相关联。我们强烈建议您不要指定其版本。
+ 
+ slf4j是门面模式的典型应用，因此在了解slf4j之前先了解一下设计模式之门面模式。   （/CodeData/设计模式/门面模式.md）
+ The Simple Logging Facade for Java (SLF4J) ：
+ 可作为各种日志记录框架（例如java.util.logging，logback和log4j）的简单外观或抽象，允许最终用户在部署时插入所需的日志记录框架。请注意，启用SLF4J的库/应用程序意味着仅添加一个强制性依赖项，即 slf4j-api-2.0.0-alpha2-SNAPSHOT.jar。
+ 
+举个例子：
+
+我们自己的系统中使用了logback这个日志系统
+我们的系统使用了A.jar，A.jar中使用的日志系统为log4j
+我们的系统又使用了B.jar，B.jar中使用的日志系统为slf4j-simple
+
+这样，我们的系统就不得不同时支持并维护logback、log4j、slf4j-simple三种日志框架，非常不便。
+
+解决这个问题的方式就是引入一个适配层，由适配层决定使用哪一种日志系统，而调用端只需要做的事情就是打印日志而不需要关心如何打印日志，slf4j或者commons-logging就是这种适配层。
+
+所以说slf4j只是一个日志标准，并不是日志系统的具体实现。slf4j只做两件事情：
+
+1.提供日志接口
+
+2.提供获取具体日志对象的方法
+
+只要所有代码都使用门面对象slf4j，我们就不需要关心其具体实现，最终所有地方使用一种具体实现即可，更换、维护都非常方便。
+
+参考：
+1.https://blog.csdn.net/anndy_/article/details/105490959?utm_medium=distribute.pc_relevant.none-task-blog-title-6&spm=1001.2101.3001.4242
+2.http://www.slf4j.org
+
+ 
+ 
