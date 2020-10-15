@@ -10,6 +10,10 @@
 启用SpringBoot的自动配置。这个注解会告诉SpringBoot自动配置它认为我们会用到的组件。是借助@Import的帮助，将所有符合自动配置条件的bean定义加载到IoC容器。
 @Import(AutoConfigurationImportSelector.class)，借助AutoConfigurationImportSelector，@EnableAutoConfiguration可以帮助SpringBoot应用将所有符合条件的@Configuration配置都加载到当前SpringBoot创建并使用的IoC容器。
 
+@EnableScheduling是通过@Import将Spring调度框架相关的bean定义都加载到IoC容器。
+
+@EnableMBeanExport是通过@Import将JMX相关的bean定义加载到IoC容器。
+
     @Target(ElementType.TYPE)
     @Retention(RetentionPolicy.RUNTIME)
     @Documented
