@@ -66,3 +66,15 @@ SpringBoot自动装配：
     
    
 2.自动装配
+自动配置幕后英雄：SpringFactoriesLoader详解
+
+  SpringFactoriesLoader属于Spring框架私有的一种扩展方案，其主要功能就是从指定的配置文件META-INF/spring.factories加载配置
+  
+       public final class SpringFactoriesLoader {
+       public static final String FACTORIES_RESOURCE_LOCATION = "META-INF/spring.factories";
+       private static final Log logger = LogFactory.getLog(SpringFactoriesLoader.class);
+       private static final Map<ClassLoader, MultiValueMap<String, String>> cache = new ConcurrentReferenceHashMap();
+
+   配合@EnableAutoConfiguration使用的话，它更多是提供一种配置查找的功能支持，即根据@EnableAutoConfiguration的完整类名org.springframework.boot.autoconfigure.EnableAutoConfiguration作为查找的Key,获取对应的一组@Configuration类
+  
+  如果我们不需要某些自动配置，可以通过@EnableAutoConfiguration注解的exclude或者excludeName属性来指定不需要的自动配置，需要注意的是，当不需要的进行自动配置的类不在classpath下时，此时只能通过excludeName属性指定类的全路径名来排除不需要的自动配置。

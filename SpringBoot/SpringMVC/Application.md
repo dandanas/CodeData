@@ -14,6 +14,8 @@
 
 @EnableMBeanExport是通过@Import将JMX相关的bean定义加载到IoC容器。
 
+见 SpringBoot/SpringApplication.md
+
     @Target(ElementType.TYPE)
     @Retention(RetentionPolicy.RUNTIME)
     @Documented
@@ -99,7 +101,7 @@
   6.根据用户是否明确设置了applicationContextClass类型以及初始化阶段的推断结果，决定该为当前SpringBoot应用创建什么类型的ApplicationContext并创建完成，然后根据条件决定是否添加`ShutdownHook`，决定是否使用自定义的`BeanNameGenerator`，决定是否使用自定义的`ResourceLoader`，当然，最重要的，将之前准备好的Environment设置给创建好的ApplicationContext使用。  
   
   `ShutdownHook`
-  参考 [https://www.cnblogs.com/goodAndyxublog/p/11658187.html]
+   ###### 参考：https://www.cnblogs.com/goodAndyxublog/p/11658187.html
   
   `BeanNameGenerator`
   spring中每个bean都要有一个id或者name标示每个唯一的bean，在xml中定义一个bean可以指定其id和name值，但那些没有指定的，或者注解的spring的bean name则是BeanNameGenerator接口实现的特性。
