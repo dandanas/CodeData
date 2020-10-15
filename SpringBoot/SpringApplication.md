@@ -57,6 +57,9 @@ SpringBoot自动装配：
    > `@Documented` 
       @Documented 注解表明这个注解应该被 javadoc工具记录. 默认情况下,javadoc是不包括注解的. 
       但如果声明注解时指定了 @Documented,则它会被 javadoc 之类的工具处理, 所以注解类型信息也会被包括在生成的文档中，是一个标记注解，没有成员。
+   > `@Inherited`
+      Inherited作用是，使用此注解声明出来的自定义注解，在使用此自定义注解时，如果注解在类上面时，子类会自动继承此注解，否则的话，子类不会继承此注解。
+      使用Inherited声明出来的注解，只有在类上使用时才会有效，对方法，属性等其他无效
       
      
 ###### 参考：https://blog.csdn.net/xsp_happyboy/article/details/80987484
