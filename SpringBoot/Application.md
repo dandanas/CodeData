@@ -1,11 +1,14 @@
-`@SpringBootApplication` 不仅表明这是一个SpringBoot应用，而且组合了三个其他的注解
+`@SpringBootApplication` 不仅表明这个类是SpringBoot的住配置类，Spring应该运行这个类的main方法来启动SpringBoot应用；
+    而且组合了三个其他的注解；
 
 ## 1.@SpringBootConfiguration
 
-@SpringBootConfiguration继承自@Configuration，二者功能也一致，标注当前类是配置类，
-并会将当前类内声明的一个或多个以@Bean注解标记的方法的实例纳入到spring容器中，并且实例名就是方法名。//？
+@SpringBootConfiguration继承自@Configuration，二者功能也一致，标注当前类是配置类（配置类也是容器中的一个组件）
+并会将当前类内声明的一个或多个以@Bean注解标记的方法的实例纳入到spring容器中，并且实例名就是方法名。
 
 ## 2.@EnableAutoConfiguration
+
+将主配置类所在包以及包下面所有子包里面的组件扫描到Spring容器中
 
 启用SpringBoot的自动配置。这个注解会告诉SpringBoot自动配置它认为我们会用到的组件。是借助@Import的帮助，将所有符合自动配置条件的bean定义加载到IoC容器。
 @Import(AutoConfigurationImportSelector.class)，借助AutoConfigurationImportSelector，@EnableAutoConfiguration可以帮助SpringBoot应用将所有符合条件的@Configuration配置都加载到当前SpringBoot创建并使用的IoC容器。
@@ -120,6 +123,3 @@
   
   13.正常情况下，遍历执行SpringApplicationRunListener的finished()方法、（如果整个过程出现异常，则依然调用所有SpringApplicationRunListener的finished()方法，只不过这种情况下会将异常信息一并传入处理）
 
-
-
-[]: https://www.cnblogs.com/goodAndyxublog/p/11658187.html
