@@ -13,11 +13,20 @@
 启用SpringBoot的自动配置。这个注解会告诉SpringBoot自动配置它认为我们会用到的组件。是借助@Import的帮助，将所有符合自动配置条件的bean定义加载到IoC容器。
 @Import(AutoConfigurationImportSelector.class)，借助AutoConfigurationImportSelector，@EnableAutoConfiguration可以帮助SpringBoot应用将所有符合条件的@Configuration配置都加载到当前SpringBoot创建并使用的IoC容器。
 
+selectImports()方法内容：
+
+SpringFactoriesLoader属于Spring框架私有的一种扩展方案，其主要功能就是从指定的配置文件META-INF/spring.factories加载配置
+
+把扫描到的这些文件包装成Properties对象，从Properties中获取到EnableAutoConfiguration类（类名）对应的值，然后把他们添加到容器中
+
+配合@EnableAutoConfiguration使用的话，它更多是提供一种配置查找的功能支持，即根据@EnableAutoConfiguration的完整类名org.springframework.boot.autoconfigure.EnableAutoConfiguration作为查找的Key,获取对应的一组@Configuration类
+  
+  如果我们不需要某些自动配置，可以通过@EnableAutoConfiguration注解的exclude或者excludeName属性来指定不需要的自动配置，需要注意的是，当不需要的进行自动配置的类不在classpath下时，此时只能通过excludeName属性指定类的全路径名来排除不需要的自动配置。
+
+
 @EnableScheduling是通过@Import将Spring调度框架相关的bean定义都加载到IoC容器。
 
 @EnableMBeanExport是通过@Import将JMX相关的bean定义加载到IoC容器。
-
-见 SpringBoot/SpringApplication.md
 
     @Target(ElementType.TYPE)
     @Retention(RetentionPolicy.RUNTIME)
