@@ -38,7 +38,10 @@ public class MathCalculator {
 ```java
 package com.dandan.aop;
 
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
+
+import java.util.Arrays;
 
 /**
  * @date：2020/10/27
@@ -58,8 +61,10 @@ public class LogAspect {
     }
 
     @Before("pointCut()")
-    public void logStart(){
-        System.out.println("除法运行。。参数列表{} ");
+    public void logStart(JoinPoint joinPoint){
+        //获取方法名和参数列表
+        Object[] args = joinPoint.getArgs();
+        System.out.println(""+joinPoint.getSignature().getName()+"除法运行。。参数列表{"+ Arrays.asList(args)+"} ");
     }
 
     @After("pointCut()")
@@ -67,17 +72,18 @@ public class LogAspect {
         System.out.println("除法结束");
     }
 
-    @AfterReturning("pointCut())")
-    public void logReturn(){
-        System.out.println("除法正常返回。。。运行结果：{} ");
+    @AfterReturning(value = "pointCut())",returning = "result")//return封装返回结果
+    public void logReturn(JoinPoint joinPoint,Object result){//JoinPoint放在参数首位
+        System.out.println(joinPoint.getSignature().getName()+"除法正常返回。。。运行结果：{"+result+"} ");
     }
 
-    @AfterThrowing("pointCut()")
-    public void logException(){
-        System.out.println("除法发生异常。。。运行异常：{}  ");
+    @AfterThrowing(value = "pointCut()",throwing ="exception" )
+    public void logException(Exception exception){
+        System.out.println("除法发生异常。。。运行异常：{"+exception+"}  ");
     }
 
 }
+
 
 ```
 4.给切面类的方法标注何时运行
@@ -140,6 +146,6 @@ public class IOCTest {
 
 ```
 ```md
-除法运行。。参数列表{} 
-除法正常返回。。。运行结果：{} 
+div除法运行。。参数列表{[1, 0]} 
+除法发生异常。。。运行异常：{java.lang.ArithmeticException: / by zero}  
 除法结束```
