@@ -94,3 +94,11 @@ public String toString() {
 System.out.println(Arrays.toString(arr));
 ```
 
+Lombok中的toString注解重写了toString方法
+
+callSuper=true 表示输出父类的域，默认只输出子类的信息
+
+```java
+@ToString(callSuper = true)
+```
+
