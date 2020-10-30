@@ -62,7 +62,7 @@ public void test() {
 }
 ```
 
-![](D:\Data\CodeData\Img\Class.PNG)
+![](..\Img\Class.PNG)
 
 鉴于历史原 getName 方法在应用于数组类型的时候会返回一个很奇怪的名字
 
@@ -74,7 +74,7 @@ public void test() {
 if(cat.getClass() == Cat.class)
 ```
 
-newInstance() 可以用来动态的创建一个实例，调用的默认的构造函数(不带参数)初始化新建的对象，则该类与其父类必须拥有不带参数的构造函数，否则会抛出异常
+**newInstance() 可以用来动态的创建一个实例，调用的默认的构造函数(不带参数)初始化新建的对象，则该类与其父类必须拥有不带参数的构造函数，否则会抛出异常** 
 
 ##### 分析类-检查类的结构
 
@@ -107,7 +107,7 @@ public void reflective(){
 }
 ```
 
-![](D:\Data\CodeData\Img\反射-检查类的结构.png)
+![](..\Img\反射-检查类的结构.png)
 
 Fileld, Method, Constructor 常用方法
 
@@ -133,3 +133,190 @@ Fileld, Method, Constructor 常用方法
 * Class getReturnType( )  【Method】
 
     返回一个用于描述返H类型的 Class 对象
+
+
+
+##### 运行时使用反射分析对象
+
+在运行时获得对象域的实际内容
+
+在编写程序时，如果知道想要査看的域名和类型，查看指定的域是一件很容易的事情
+
+而利用反射机制可以查看在编译时还不清楚的对象域
+
+1. 获得对应的Class对象
+2. 通过Class对象获得对应的域 Field
+3. 查看对象域的关键方法是 Field类中的 get 方法。如果 f 是一个 Field类型的对象，obj 是某个包含 f域的类的对象，f.get(obj)将返回一个 对象，其值为 obj 域的当前值
+
+```java
+public class Reflective {
+	@Test
+    public void test3(){
+        Animal animal = new Animal("person", "dandan", 12);
+        animal.setNumber(10);
+        System.out.println("更改前 : " + animal);
+        Class animalClass = animal.getClass();
+        // type 与name 都是可见的 public
+        Field type = null;
+        Field number = null;
+        // name 是 private
+        Field name = null;
+        try {
+            type = animalClass.getDeclaredField("type");
+            number = animalClass.getDeclaredField("number");
+            name = animalClass.getDeclaredField("name");
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+        Object animalBuild = null;
+        Object animalAgeBuild = null;
+        Object animalNameBuild = null;
+        try {
+            //获取 animal 对象中各个 Field 的值
+            animalBuild = type.get(animal);
+            animalAgeBuild = number.getInt(animal);
+
+            //覆盖访问控制
+            name.setAccessible(true);
+            animalNameBuild = name.get(animal);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        System.out.println("animal type : " + animalBuild);
+        System.out.println("animal age : " + animalAgeBuild);
+        System.out.println("animal name : " + animalNameBuild);
+        try {
+            //更改 animal 对象中 type Field 的值
+            type.set(animal, "dog");
+            number.setInt(animal, 100);
+            name.set(animal, "sahbi");
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        System.out.println("更改后 : " + animal);
+    }
+}
+```
+
+![](..\Img\反射-运行时分析对像.png)
+
+name是个私有域，在用get方法是会抛出异常
+
+用get方法只能得到可访问域的值，除非拥有访问权限，否则 Java 安全机制只允许査看任意对象有哪些域，而不允许读取它们的值
+
+name.setAccessible(true); 可以使 name覆盖访问控制，使Java 程序没有受到安全管理器的控制
+
+setAccessible方法是 AccessibleObject类中的一个方法，它是 Field、 Method 和 Constructor类的公共超类。这个特性是为调试、持久存储和相似机制提供的
+
+当域的数据类型是基本数据类型而不是类的时候，可以使用 Field类中的 getInt()方法，也可以调用 get 方法，会自动装箱
+
+Filed 的set方法用一个新值设置 Obj 对象中Field对象表示的域
+
+AccessibleObject  (Field、 Method 和 Constructor类的公共超类) 的方法
+
+* void setAccessible(boolean flag) 为反射对象设置可访问标志。flag 为 true 表明屏蔽 Java语言的访问检查，使得对象的 私有属性也可以被査询和设置。
+* boolean  isAccessible( ) 返回反射对象的可访问标志的值。
+* static void setAccessible(AccessibleObject[ ] array ,boolean flag) 是一种设置对象数组可访问标志的快捷方法
+
+Field 获取对象的域值，与设置对象的域值
+
+* Object  get (Object obj ) 返回 obj 对象中用Field 对象表示的域值
+* void  set(Object obj ,Object newValue) 用一个新值设置 Obj 对象中Field对象表示的域
+
+
+
+##### 反射编写泛型数组
+
+java.lang.reflect 包中的 Array类允许动态地创建数组
+
+一个对象数组( Object[]) 不能转换成雇员数组( Employee[ ])。如果这样做，则在运行时 Java将会产生 ClassCastException 异常
+
+![](..\Img\反射-编写泛型数组.png)
+
+Java 数组会记住每个元素的类型，即创建数 组时 new表达式中使用的元素类型。将一个Employee[ ]临时地转换成 Object[ ]数组，然后 再把它转换回来是可以的，但一从开始就是 Object[]  的数组却永远不能转换成 Employe [] 数组
+
+目的就是编写通用数组复制编码
+
+需要 能创建于原数组类型相同的新数组，使用需要java, lang.reflect 包中 Array类的一些方法
+
+```java
+Object newArray = Array.newlnstance(componentType, newLength) ;
+```
+
+* 需要获取原数组的类对象
+* 确认是数组
+* 使用 Class类（只能定义表示数组的类对象）的 getComponentType方法确定数组对应
+    的类型
+
+```java
+public class Reflective {    
+	private static Object copyOf(Object a, int newLength){
+        //获取数组的类对象
+        Class c = a.getClass();
+        //确认类对象是数组
+        if(!c.isArray()){
+            return null;
+        }
+        //确认数组对应的类型
+        Class componentType = c.getComponentType();
+        int length = Array.getLength(a);
+        Object newArray = Array.newInstance(componentType, newLength);
+        System.arraycopy(a, 0, newArray, 0, Math.min(length, newLength));
+        return newArray;
+    }
+}
+```
+
+
+
+##### 反射机制允许调用任意方法
+
+在 Method类中有一个 invoke 方法，它允许调用包装在当前 Method 对象中 的方法
+
+```
+Object invoke(Object obj, Object... args)
+```
+
+第一个参数是要调用方法的对象， 后面接该方法的参数
+
+```java
+public class Reflective {    
+	@Test
+    public void test6(){
+        Animal animal = new Animal("dog", "rock", 12);
+        animal.setNumber(2);
+        System.out.println("animal begin changed : " + animal);
+        Class animalClass = animal.getClass();
+        Method test = null;
+        Method toString = null;
+        Method setType = null;
+        try {
+            //获取Animal 类对象的方法
+            test = animalClass.getDeclaredMethod("Test");
+            toString = animalClass.getDeclaredMethod("toString");
+            setType = animalClass.getDeclaredMethod("setType", String.class);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        System.out.println("通过反射调用 begin");
+        try {
+            // invoke 调用参数对象的该方法
+            test.invoke(animal);
+            System.out.println("通过invoke调用 : " + toString.invoke(animal));
+            setType.invoke(animal, "cat");
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        System.out.println("反射调用 end");
+        System.out.println("animal end changed : " + animal);
+    }
+}
+```
+
+通过invoke 可以调用任意方法
+
+invoke 的参数和返回值必须是 Object 类型的
+
+* public  Object  invoke( Object implicitParameter , Object[]  explicitParamenters) 调用这个对象所描述的方法，传递给定参数，并返回方法的返回值。对于静态方法，把 null作为隐式参数传递。在使用包装器传递基本类型的值时，基本类型的返回值必须是未包装的。
