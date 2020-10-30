@@ -1,6 +1,19 @@
-### AOP【动态代理】  
-程序运行期间，动态的将某段代码切入到指定方法指定位置进行运行的编程方式  
+AOP （Aspect Oriented Programing） 面向编程思想
 
+程序运行期间，动态的将某段代码切入到指定方法指定位置进行运行的编程方式 
+
+jdk默认的动态代理，如果目标对象没有实现任何接口，那么无法为其创建代理对象；在Spring中，如果目标对象有实现接口，那就为期创建代理对象，否则cglib创建代理对象   
+
+Spring AOP的几个专业术语
+> 横切关注点    
+> 通知方法  
+> 切面类  
+> 连接点  
+> 切入点  
+> 切入点表达式 在众多连接点中选出感兴趣的地方
+
+AOP运用  
+加日志；安全检查，权限验证，事务控制
 1.导入aop模块  
 ```xml
  <!-- https://mvnrepository.com/artifact/org.springframework/spring-aspects -->
@@ -81,6 +94,37 @@ public class LogAspect {
     public void logException(Exception exception){
         System.out.println("除法发生异常。。。运行异常：{"+exception+"}  ");
     }
+    
+    /**
+         * 环绕通知是Spring中最强大的通知，手写版的动态代理
+         * 环绕通知中有一个参数
+         */
+        @Around("pointCut()")
+        public Object myAround(ProceedingJoinPoint pdp) throws Throwable {
+    
+            Object[] args = pdp.getArgs();
+    
+            //利用反射调用目标方法即可,就是method.invoke()
+            Object proceed = null;
+            try {
+                System.out.println(""+pdp.getSignature().getName()+"除法运行。。参数列表{"+ Arrays.asList(args)+"} ");
+                proceed = pdp.proceed(args);
+                System.out.println(pdp.getSignature().getName()+"除法正常返回。。。运行结果：{"+proceed+"} ");
+            } catch (Throwable throwable) {
+                System.out.println("除法发生异常。。。运行异常：{"+throwable+"}  ");
+                throwable.printStackTrace();
+            } finally {
+                System.out.println("除法结束");
+            }
+    
+    
+            System.out.println("环绕 ");
+    
+            //调用方法后的返回值
+            return proceed;
+    
+        }
+
 
 }
 
