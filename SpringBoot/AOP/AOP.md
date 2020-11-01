@@ -97,7 +97,6 @@ public class LogAspect {
     
     /**
          * 环绕通知是Spring中最强大的通知，手写版的动态代理
-         * 环绕通知中有一个参数
          */
         @Around("pointCut()")
         public Object myAround(ProceedingJoinPoint pdp) throws Throwable {
