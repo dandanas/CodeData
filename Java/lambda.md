@@ -79,3 +79,76 @@ Lambda表达式的一些约定
 
 ##### 方法引用
 
+如果**函数式接口的实现恰好可以通过调用一个方法来实现**，那么我们可以使用方法引用
+
+```java
+public class Cat extends Animal{
+
+    private Integer legs;
+
+    //不带参数的构造方法
+    public Cat(){
+    }
+
+    public Cat(String type, String name, Integer age, Integer legs){
+        super(type, name, age);
+        this.legs = legs;
+    }
+	
+    //实例方法
+    public void getCatName(String name){
+        String newName = name + " getName";
+        System.out.println(newName);
+    }
+	
+    //静态方法
+    public static void staticName(String name){
+        System.out.println(name + " static dandan");
+    }
+}
+```
+
+* 静态方法的方法引用
+
+    ```java
+    //静态方法引用
+    Consumer<String> consumerStatic = Cat::staticName;
+    consumerStatic.accept("dandan");
+    //输出: dandan static dandan
+    ```
+
+    
+
+* 非静态方法的方法引用
+
+    ```java
+    //构造方法引用
+    Supplier<Cat> catNewSupplier = Cat::new;
+    System.out.println(catNewSupplier.get());
+    //输出: Cat(super=Animal(type=null, name=null, age=null, number=0), legs=null)
+    ```
+
+    
+
+* 构造函数的方法引用
+
+    ```java
+    Cat cat = new Cat("cat", "miao", 12, 12);
+    //实例方法引用
+    Consumer<String> consumer = cat::getCatName;
+    consumer.accept("dandna");
+    //输出: dandna getName
+    ```
+
+使用方法引用，如果**函数式接口的实现恰好可以通过调用一个方法来实现**，那么我们可以使用方法引用来替代Lambda表达式
+
+```java
+// Supplier是一个无入参带返回的值的函数式编程接口
+
+// () -> new Cat()这整句Lambda表达式，返回的是Supplier接口的实例。从Lambda表达式可以看出无参数，带返回值
+Supplier<Cat> cat = () -> new Cat(); 
+
+// 由于这个“() -> new Cat()”Lambda表达式可以通过调用一个方法就实现了，那么我们可以优化成方法引用
+Supplier<Cat> cat2 = Cat::new;
+```
+
