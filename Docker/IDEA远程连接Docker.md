@@ -40,7 +40,7 @@ ExecStart=/usr/bin/dockerd -H tcp://0.0.0.0:2375  -H unix:///var/run/docker.sock
 
 下载Docker插件
 
-![](E:\CodeData\Img\idea_docker_配置.png)
+![](..\Img\idea_docker_配置.png)
 
 直到 Connection successful 才算成功
 
@@ -107,7 +107,7 @@ ENTRYPOINT ["java","-jar","demo.jar"]
 
 ##### 10.docker image
 
-![](E:\CodeData\Img\dockerimage.PNG)
+![](..\Img\dockerimage.PNG)
 
 image ID or name 直接指定镜像名
 

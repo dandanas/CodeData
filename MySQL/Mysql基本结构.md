@@ -4,7 +4,7 @@
 
 Mysql可以分为Server层和存储引擎两部分
 
-![MySQL逻辑架构图](E:\CodeData\Img\Mysql逻辑架构图.png)
+![MySQL逻辑架构图](..\Img\Mysql逻辑架构图.png)
 
 Server层包括连接器、查询缓存、分析器、优化器、执行器等，包含MySQL的大部分核心服务，以及所有的内置函数，所有跨引擎的功能都在这一层，如存储过程、触发器、视图。
 
@@ -79,7 +79,7 @@ MySQL在拿到查询请求后，会先到查询缓存查看，之前是不是执
 
 ###### MySQL 的日志类型
 
-![](E:\CodeData\Img\MySQL日志类型.png)
+![](..\Img\MySQL日志类型.png)
 
 >   **redo log**
 
